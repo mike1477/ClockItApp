@@ -28,7 +28,10 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "../CI-SPA/node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss",
+              "../CI-SPA/node_modules/@fortawesome/fontawesome-free/scss/brands.scss",
+              "../CI-SPA/node_modules/@fortawesome/fontawesome-free/scss/solid.scss"
             ],
             "scripts": []
           },
