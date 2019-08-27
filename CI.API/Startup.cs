@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CI.DAL;
+using CI.DAL.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -27,6 +29,17 @@ namespace CI.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            IdentityBuilder builder = services.AddIdentityCore<User>(opt => {
+                opt.Password.RequireDigit = false;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequiredLength = 4;
+            });
+
+            builder.AddEntityFrameworkStores<ApplicationDbContext>();
+            
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("Default")));
 
