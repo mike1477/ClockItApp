@@ -38,6 +38,7 @@ namespace CI.API
             });
 
             builder.AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.AddSignInManager<SignInManager<User>>();
             
 
             services.AddDbContext<ApplicationDbContext>(options =>
