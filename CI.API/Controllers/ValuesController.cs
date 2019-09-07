@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CI.DAL;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,7 @@ namespace CI.API.Controllers
 
         // GET api/values http://localhost:5000/api/values
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetValues()
         {
             var values = await _context.Values.ToListAsync();

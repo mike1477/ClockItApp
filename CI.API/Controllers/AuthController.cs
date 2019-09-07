@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using CI.API.ViewModels;
 using CI.DAL;
@@ -8,6 +11,8 @@ using CI.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CI.API.Controllers
 {
@@ -18,10 +23,12 @@ namespace CI.API.Controllers
 
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IConfiguration _config;
 
-        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration config)
         {
             _signInManager = signInManager;
+            _config = config;
             _userManager = userManager;
 
         }
@@ -41,26 +48,36 @@ namespace CI.API.Controllers
             {
                 return BadRequest(result);
             }
-            return Ok(result);
+            return Ok(new {
+                result = result,
+                token = JwtTokenGeneratorMachine(user)
+            });
         }
 
+        private string JwtTokenGeneratorMachine(User userInfo)  
+        {  
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, userInfo.Id),
+                new Claim(ClaimTypes.Name, userInfo.UserName)
+            };
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8
+             .GetBytes(_config.GetSection("AppSettings:Key").Value));
+             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512Signature);
+  
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = credentials
+            };
+            
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+  
+            return tokenHandler.WriteToken(token);
+        }   
 
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+       
     }
 }
