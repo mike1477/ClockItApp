@@ -39,9 +39,10 @@ namespace CI.API
                 opt.Password.RequireUppercase = false;
                 opt.Password.RequiredLength = 4;
             });
-
+            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
             builder.AddEntityFrameworkStores<ApplicationDbContext>();
             builder.AddSignInManager<SignInManager<User>>();
+            builder.AddRoleManager<RoleManager<IdentityRole>>();
 
              services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

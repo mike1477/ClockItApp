@@ -17,9 +17,11 @@ namespace CI.API.Controllers
     {
 
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public EmployersController(UserManager<User> userManager)
+        public EmployersController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
+            _roleManager = roleManager;
             _userManager = userManager;
 
         }
@@ -28,6 +30,10 @@ namespace CI.API.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> Create(CreateEmployerViewModel model)
         {
+            if(!(await _roleManager.RoleExistsAsync("Employer")))
+            {
+                await _roleManager.CreateAsync(new IdentityRole("Employer"));
+            }
             var employer = new User
             {
                 UserName = model.Username,
@@ -35,10 +41,14 @@ namespace CI.API.Controllers
             };
             var result = await _userManager.CreateAsync(employer, model.Password);
 
-            if(!result.Succeeded)
+            if (!result.Succeeded)
             {
                 return BadRequest(result);
             }
+
+            var userFromDb  = await _userManager.FindByNameAsync(employer.UserName);
+            await _userManager.AddToRoleAsync(userFromDb, "Employer");
+            
             return Ok(result);
         }
 

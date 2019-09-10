@@ -54,13 +54,22 @@ namespace CI.API.Controllers
             });
         }
 
-        private string JwtTokenGeneratorMachine(User userInfo)  
+        private async Task<string> JwtTokenGeneratorMachine(User userInfo)  
         {  
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, userInfo.Id),
                 new Claim(ClaimTypes.Name, userInfo.UserName)
             };
+
+            var roles = await _userManager.GetRolesAsync(userInfo);
+
+
+            foreach (var role in roles)
+            {
+                claims.Add( new Claim(ClaimTypes.Role, role));
+            }
+
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8
              .GetBytes(_config.GetSection("AppSettings:Key").Value));
              var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512Signature);
