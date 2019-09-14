@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CI.DAL\CI.DAL.csproj" />
+    <ProjectReference Include="..\CI.SER\CI.SER.csproj" />
   </ItemGroup>
 
 </Project>
