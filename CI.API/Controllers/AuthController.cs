@@ -38,7 +38,7 @@ namespace CI.API.Controllers
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             var user = await _userManager.FindByNameAsync(model.Username);
-            if(user == null)
+            if (user == null)
             {
                 return BadRequest();
             }
@@ -48,14 +48,30 @@ namespace CI.API.Controllers
             {
                 return BadRequest(result);
             }
-            return Ok(new {
+            return Ok(new
+            {
                 result = result,
                 token = JwtTokenGeneratorMachine(user)
             });
         }
 
-        private async Task<string> JwtTokenGeneratorMachine(User userInfo)  
-        {  
+        // Post api/auth/confirmemail
+        [HttpPost("confirmemail")]
+        public async Task<IActionResult> ConfirmEmail(ConfirmEmailViewModel model)
+        {
+            var employer = await _userManager.FindByIdAsync(model.UserId);
+            var confirm = await _userManager.ConfirmEmailAsync(employer, Uri.UnescapeDataString(model.Token));
+
+            if (confirm.Succeeded)
+            {
+                return Ok();
+            }
+
+            return Unauthorized();
+        }
+
+        private async Task<string> JwtTokenGeneratorMachine(User userInfo)
+        {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, userInfo.Id),
@@ -67,26 +83,26 @@ namespace CI.API.Controllers
 
             foreach (var role in roles)
             {
-                claims.Add( new Claim(ClaimTypes.Role, role));
+                claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8
              .GetBytes(_config.GetSection("AppSettings:Key").Value));
-             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512Signature);
-  
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512Signature);
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(1),
                 SigningCredentials = credentials
             };
-            
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-  
-            return tokenHandler.WriteToken(token);
-        }   
 
-       
+            return tokenHandler.WriteToken(token);
+        }
+
+
     }
 }
