@@ -1,1 +1,26 @@
-<p>login works!</p>
+<div class="row">
+    <div class="col-md-6 offset-md-3 mt-4">
+        <h3>Login</h3>
+        <form>
+            <div class="form-group">
+                <label for="loginUsername">Username</label>
+                <input type="text"
+                       class="form-control"
+                       id="loginUsername"
+                       placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password"
+                       class="form-control"
+                       id="loginPassword"
+                       placeholder="Password">
+            </div>
+            <div class="form-group form-check">
+                <a [routerLink]="['/reset-password']">Forgot Password</a>
+            </div>
+            <button type="submit"
+                    class="btn btn-primary">Login <i class="fas fa-sign-in-alt"></i></button>
+        </form>
+    </div>
+</div>
