@@ -1,10 +1,15 @@
 <div class="row">
     <div class="col-md-6 offset-md-3 mt-4">
         <h3>Login</h3>
-        <form>
+        <form #f="ngForm"
+              (ngSubmit)="onSubmit(f)">
             <div class="form-group">
                 <label for="loginUsername">Username</label>
                 <input type="text"
+                       name="username"
+                       ngModel
+                       required
+                       #username="ngModel"
                        class="form-control"
                        id="loginUsername"
                        placeholder="Enter username">
@@ -12,6 +17,10 @@
             <div class="form-group">
                 <label for="loginPassword">Password</label>
                 <input type="password"
+                       name="password"
+                       ngModel
+                       required
+                       #password="ngModel"
                        class="form-control"
                        id="loginPassword"
                        placeholder="Password">
@@ -20,6 +29,7 @@
                 <a [routerLink]="['/reset-password']">Forgot Password</a>
             </div>
             <button type="submit"
+                    [disabled]="f.invalid"
                     class="btn btn-primary">Login <i class="fas fa-sign-in-alt"></i></button>
         </form>
     </div>

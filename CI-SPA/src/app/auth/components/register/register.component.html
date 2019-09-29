@@ -1,10 +1,15 @@
 <div class="row">
     <div class="col-md-6 offset-md-3 mt-4">
         <h3>Register New Employer</h3>
-        <form>
+        <form #f="ngForm"
+              (ngSubmit)="onSubmit(f)">
             <div class="form-group">
                 <label for="registerUsername">Username</label>
                 <input type="text"
+                       name="username"
+                       ngModel
+                       required
+                       #username="ngModel"
                        class="form-control"
                        id="registerUsername"
                        placeholder="Enter username">
@@ -12,6 +17,10 @@
             <div class="form-group">
                 <label for="registerEmail">Email</label>
                 <input type="email"
+                       name="email"
+                       ngModel
+                       required
+                       #email="ngModel"
                        class="form-control"
                        id="registerEmail"
                        placeholder="Enter email">
@@ -19,11 +28,16 @@
             <div class="form-group">
                 <label for="registerPassword">Password</label>
                 <input type="password"
+                       name="password"
+                       ngModel
+                       required
+                       #password="ngModel"
                        class="form-control"
                        id="registerPassword"
                        placeholder="Password">
             </div>
             <button type="submit"
+                    [disabled]="f.invalid"
                     class="btn btn-primary">Register <i class="fas fa-sign-in-alt"></i></button>
         </form>
     </div>
