@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
 
@@ -9,6 +9,8 @@ import { map } from 'rxjs/operators';
 export class AuthService {
 
   authUrl = "http://localhost:5000/api/auth/";
+  employersUrl = "http://localhost:5000/api/employers/";
+  confirmEmailUrl = "test.com";
 
   constructor(private http: HttpClient) { }
 
@@ -21,5 +23,13 @@ export class AuthService {
         }
       })
     )
+  }
+
+  register(model: any) {
+    let headers = new HttpHeaders({
+      'confirmEmailUrl': this.confirmEmailUrl
+    });
+    let options = { headers: headers };
+    return this.http.post(this.employersUrl + 'create', model, options);
   }
 }
