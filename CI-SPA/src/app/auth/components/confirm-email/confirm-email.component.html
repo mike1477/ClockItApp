@@ -1,0 +1,15 @@
+<div class="row">
+    <div class="col-md-6 offset-md-3 mt-4">
+        <h3>Email Confirmation Page</h3>
+        <div class="alert alert-primary"
+             *ngIf="emailConfirmed"
+             role="alert">
+            Email confirmed
+        </div>
+        <div class="alert alert-warning"
+             *ngIf="!emailConfirmed"
+             role="alert">
+            Unable to confirm email
+        </div>
+    </div>
+</div>

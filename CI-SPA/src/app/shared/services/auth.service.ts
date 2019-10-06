@@ -10,7 +10,7 @@ export class AuthService {
 
   authUrl = "http://localhost:5000/api/auth/";
   employersUrl = "http://localhost:5000/api/employers/";
-  confirmEmailUrl = "test.com";
+  confirmEmailUrl = "http://localhost:4200/confirm-email/";
 
   constructor(private http: HttpClient) { }
 
@@ -31,5 +31,9 @@ export class AuthService {
     });
     let options = { headers: headers };
     return this.http.post(this.employersUrl + 'create', model, options);
+  }
+
+  confirmEmail(model: any) {
+    return this.http.post(this.authUrl + 'confirmemail', model);
   }
 }
