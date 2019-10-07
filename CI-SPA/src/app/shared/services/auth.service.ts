@@ -11,6 +11,7 @@ export class AuthService {
   authUrl = "http://localhost:5000/api/auth/";
   employersUrl = "http://localhost:5000/api/employers/";
   confirmEmailUrl = "http://localhost:4200/confirm-email/";
+  changePasswordUrl = "http://localhost:4200/change-password/";
 
   constructor(private http: HttpClient) { }
 
@@ -33,7 +34,18 @@ export class AuthService {
     return this.http.post(this.employersUrl + 'create', model, options);
   }
 
+  resetPassword(model: any) {
+    let headers = new HttpHeaders({
+      'changePasswordUrl': this.changePasswordUrl
+    });
+    let options = { headers: headers };
+    return this.http.post(this.authUrl + 'resetpassword', model, options);
+  }
+
   confirmEmail(model: any) {
     return this.http.post(this.authUrl + 'confirmemail', model);
+  }
+  changePassword(model: any) {
+    return this.http.post(this.authUrl + 'changepassword', model);
   }
 }
