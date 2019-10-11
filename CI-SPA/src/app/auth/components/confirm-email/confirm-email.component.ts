@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import { ProgressBarService } from 'src/app/shared/services/progress-bar.service';
 
 @Component({
   selector: 'app-confirm-email',
@@ -12,7 +13,7 @@ export class ConfirmEmailComponent implements OnInit {
   emailConfirmed: boolean = false;
   urlParams: any = {};
 
-  constructor(private route: ActivatedRoute, private authService: AuthService) { }
+  constructor(private route: ActivatedRoute, private authService: AuthService, public progressBar: ProgressBarService) { }
 
   ngOnInit() {
     this.urlParams.token = this.route.snapshot.queryParamMap.get('token');
@@ -21,11 +22,16 @@ export class ConfirmEmailComponent implements OnInit {
   }
 
   confirmEmail() {
+    this.progressBar.startLoading();
     this.authService.confirmEmail(this.urlParams).subscribe(() => {
+      this.progressBar.setSuccess();
       console.log("success");
+      this.progressBar.completeLoading();
       this.emailConfirmed = true;
     }, error => {
+      this.progressBar.setError();
       console.log(error);
+      this.progressBar.completeLoading();
       this.emailConfirmed = false;
     })
   }
