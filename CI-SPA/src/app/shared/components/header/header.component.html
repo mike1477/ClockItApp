@@ -15,7 +15,7 @@
     </button>
     <div class="collapse navbar-collapse"
          id="navbarNav">
-        <ul class="navbar-nav">
+        <ul class="navbar-nav ml-auto headerNav">
             <li class="nav-item">
                 <a class="nav-link"
                    [routerLink]="['register']"
@@ -26,10 +26,20 @@
                    [routerLink]="['login']"
                    routerLinkActive="active">Login</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item dropdown"
+                dropdown>
                 <a class="nav-link"
-                   [routerLink]="['reset-password']"
-                   routerLinkActive="active">Reset Password</a>
+                   dropdownToggle>
+                    Profile
+                </a>
+                <div class="dropdown-menu dropdown-menu-right"
+                     *dropdownMenu>
+                    <a class="dropdown-item"
+                       [routerLink]="['reset-password']"
+                       routerLinkActive="active"><i class="fas fa-key"></i> Reset Password</a>
+                    <a class="dropdown-item"
+                       href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
             </li>
 
         </ul>
