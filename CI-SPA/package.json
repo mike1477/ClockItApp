@@ -19,6 +19,7 @@
     "@angular/platform-browser": "~8.2.0",
     "@angular/platform-browser-dynamic": "~8.2.0",
     "@angular/router": "~8.2.0",
+    "@auth0/angular-jwt": "^3.0.0",
     "@ngx-progressbar/core": "^5.3.2",
     "bootstrap": "^4.3.1",
     "ngx-alerts": "^4.0.0",

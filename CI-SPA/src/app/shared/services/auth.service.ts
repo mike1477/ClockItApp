@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { JwtHelperService } from "@auth0/angular-jwt";
 
 
 @Injectable({
@@ -12,6 +13,7 @@ export class AuthService {
   employersUrl = "http://localhost:5000/api/employers/";
   confirmEmailUrl = "http://localhost:4200/confirm-email/";
   changePasswordUrl = "http://localhost:4200/change-password/";
+  helper = new JwtHelperService();
 
   constructor(private http: HttpClient) { }
 
@@ -45,7 +47,15 @@ export class AuthService {
   confirmEmail(model: any) {
     return this.http.post(this.authUrl + 'confirmemail', model);
   }
+
   changePassword(model: any) {
     return this.http.post(this.authUrl + 'changepassword', model);
   }
+
+  loggedIn() {
+    const token = localStorage.getItem('token');
+    return !this.helper.isTokenExpired(token);
+  }
+
+
 }
