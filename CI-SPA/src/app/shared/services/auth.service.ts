@@ -14,6 +14,7 @@ export class AuthService {
   confirmEmailUrl = "http://localhost:4200/confirm-email/";
   changePasswordUrl = "http://localhost:4200/change-password/";
   helper = new JwtHelperService();
+  decodedToken: any;
 
   constructor(private http: HttpClient) { }
 
@@ -23,6 +24,7 @@ export class AuthService {
         const user = response;
         if (user.result.succeeded) {
           localStorage.setItem('token', user.token);
+          this.decodedToken = this.helper.decodeToken(user.token);
         }
       })
     )
