@@ -7,9 +7,9 @@ import { NgProgressRef } from '@ngx-progressbar/core';
 export class ProgressBarService {
 
   progressRef: NgProgressRef;
-  default: string = "#1B95E0";
-  success: string = "#42A948";
-  error: string = "#a94442";
+  default: string = "#2A9FD6";
+  success: string = "#77B300";
+  error: string = "#CC0000";
   currentColor: string = this.default;
 
   constructor() { }
