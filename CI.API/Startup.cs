@@ -75,6 +75,7 @@ namespace CI.API
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSingleton<IEmail, MailJet>();
+            services.AddSingleton<ICloudStorage, AzureStorage>();
             services.Configure<EmailOptionsDTO>(Configuration.GetSection("MailJet"));
         }
 
