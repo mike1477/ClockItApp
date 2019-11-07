@@ -7,13 +7,11 @@ namespace CI.SER.Interfaces
 {
     public interface ICloudStorage
     {
-        Task<List<Uri>> Index();
 
         Task UploadAsync(IFormFile file);
 
         Task DeleteImage(string name);
 
-        Task DeleteAll();
 
     }
 }

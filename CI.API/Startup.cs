@@ -7,6 +7,7 @@ using CI.DAL;
 using CI.DAL.Entities;
 using CI.SER;
 using CI.SER.DTOs;
+using CI.SER.Factories;
 using CI.SER.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -75,6 +76,14 @@ namespace CI.API
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSingleton<IEmail, MailJet>();
+            services.AddSingleton<IStorageConnectionFactory, StorageConnectionFactory>(sp =>
+            {
+                CloudStorageOptionsDTO cloudStorageOptionsDTO = new CloudStorageOptionsDTO();
+                cloudStorageOptionsDTO.ConnectionString = Configuration["AzureBlobStorage:ConnectionString"];
+                cloudStorageOptionsDTO.ProfilePicsContainer = Configuration["AzureBlobStorage:BlobContainer"];
+                return new StorageConnectionFactory(cloudStorageOptionsDTO);
+
+            });
             services.AddSingleton<ICloudStorage, AzureStorage>();
             services.Configure<EmailOptionsDTO>(Configuration.GetSection("MailJet"));
         }

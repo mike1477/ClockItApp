@@ -25,13 +25,6 @@ namespace CI.API.Controllers
             _context = context;
         }
 
-        // GET api/values http://localhost:5000/api/values
-        [HttpGet]
-        public async Task<IActionResult> GetValues()
-        {
-            var values = await _storage.Index();
-            return Ok(values);
-        }
 
         // POST api/values
         [HttpPost]
@@ -49,13 +42,5 @@ namespace CI.API.Controllers
             return Ok();
         }
 
-
-        // DELETE api/values/5
-        [HttpDelete]
-        public async Task<IActionResult> DeleteAll()
-        {
-            await _storage.DeleteAll();
-            return Ok();
-        }
     }
 }

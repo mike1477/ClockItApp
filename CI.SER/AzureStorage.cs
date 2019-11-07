@@ -11,55 +11,25 @@ namespace CI.SER
 {
     public class AzureStorage : ICloudStorage
     {
+        private readonly IStorageConnectionFactory _storageConnectionFactory;
 
-        static CloudBlobClient blobClient;
-        const string blobContainerName = "profilepics";
-        static CloudBlobContainer blobContainer;
-
-        public async Task DeleteAll()
+        public AzureStorage(IStorageConnectionFactory storageConnectionFactory)
         {
-            foreach (var blob in blobContainer.ListBlobs())
-            {
-                if (blob.GetType() == typeof(CloudBlockBlob))
-                {
-                    await ((CloudBlockBlob)blob).DeleteIfExistsAsync();
-                }
-            }
-
+            _storageConnectionFactory = storageConnectionFactory;
         }
 
         public async Task DeleteImage(string name)
         {
             Uri uri = new Uri(name);
             string filename = Path.GetFileName(uri.LocalPath);
-
+            var blobContainer = await _storageConnectionFactory.GetContainer();
             var blob = blobContainer.GetBlockBlobReference(filename);
             await blob.DeleteIfExistsAsync();
         }
 
-        public async Task<List<Uri>> Index()
-        {
-
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=clockithubstorage;AccountKey=5vUWxztkeThRBaFZ2/ZMisZbH1DBdYQSuD1QIBi/Cty+YR5gVmLUHaN/41Djgm9PlFOVxzOzzJpgitl2diTEhg==;EndpointSuffix=core.windows.net");
-
-            blobClient = storageAccount.CreateCloudBlobClient();
-            blobContainer = blobClient.GetContainerReference(blobContainerName);
-            await blobContainer.CreateIfNotExistsAsync();
-
-            await blobContainer.SetPermissionsAsync(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob });
-
-            List<Uri> allBlobs = new List<Uri>();
-            foreach (IListBlobItem blob in blobContainer.ListBlobs())
-            {
-                if (blob.GetType() == typeof(CloudBlockBlob))
-                    allBlobs.Add(blob.Uri);
-            }
-
-            return allBlobs;
-        }
-
         public async Task UploadAsync(IFormFile file)
         {
+            var blobContainer = await _storageConnectionFactory.GetContainer();
             CloudBlockBlob blob = blobContainer.GetBlockBlobReference(GetRandomBlobName(file.FileName));
             using (var stream = file.OpenReadStream())
             {
