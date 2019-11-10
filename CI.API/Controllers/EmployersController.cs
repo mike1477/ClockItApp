@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using CI.API.ViewModels;
@@ -8,6 +9,7 @@ using CI.DAL;
 using CI.DAL.Entities;
 using CI.SER.DTOs;
 using CI.SER.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,11 +26,13 @@ namespace CI.API.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IOptions<EmailOptionsDTO> _emailOptions;
         private readonly IEmail _email;
+        private readonly ICloudStorage _cloudStorage;
 
         public EmployersController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager,
-        IOptions<EmailOptionsDTO> emailOptions, IEmail email)
+        IOptions<EmailOptionsDTO> emailOptions, IEmail email, ICloudStorage cloudStorage)
         {
             _email = email;
+            _cloudStorage = cloudStorage;
             _emailOptions = emailOptions;
             _roleManager = roleManager;
             _userManager = userManager;
@@ -65,7 +69,7 @@ namespace CI.API.Controllers
             query["userid"] = employer.Id;
             uriBuilder.Query = query.ToString();
             var urlString = uriBuilder.ToString();
-      
+
             var emailBody = $"Please confirm your email by clicking on the link below </br>{urlString}";
             await _email.Send(model.Email, emailBody, _emailOptions.Value);
 
@@ -84,10 +88,41 @@ namespace CI.API.Controllers
         {
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT api/employers/update/5
+        [HttpPut("update/{employerid}")]
+        [Authorize(Policy = "EmployerPolicy")]
+        public async Task<IActionResult> Update(string employerid, [FromForm] UpdateEmployerViewModel model)
         {
+            if (employerid != User.FindFirst(ClaimTypes.NameIdentifier).Value)
+            {
+                return Unauthorized();
+            }
+
+            var employerFromDB = await _userManager.FindByIdAsync(employerid);
+
+            //Update Profile
+
+            if (employerFromDB.ProfileImageUrl != null)
+            {
+                await _cloudStorage.DeleteImage(employerFromDB.ProfileImageUrl);
+            }
+            var addedFileNameUrl = await _cloudStorage.UploadAsync(model.ProfileImage);
+            employerFromDB.ProfileImageUrl = addedFileNameUrl;
+
+
+            var result = await _userManager.UpdateAsync(employerFromDB);
+            var updatedEmployer = await _userManager.FindByIdAsync(employerid);
+
+            if (result.Succeeded)
+            {
+                return Ok(new
+                {
+                    result = result,
+                    updatedEmployer
+                });
+            }
+
+            return BadRequest(result);
         }
 
         // DELETE api/values/5
