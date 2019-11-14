@@ -1,7 +1,8 @@
 <div class="row">
     <div class="col-md-6 offset-md-3 mt-4">
         <h3>Edit Employer Account</h3>
-        <form>
+        <form #f="ngForm"
+              (ngSubmit)="onSubmit()">
             <div class="form-group">
                 <div>
                     <label for="profileImage">Change Profile Image</label>
@@ -10,7 +11,8 @@
                 <input type="file"
                        name="profileImage"
                        id="profileImage"
-                       placeholder="Change Profile Image">
+                       placeholder="Change Profile Image"
+                       (change)="onFileChange($event)">
             </div>
             <button type="submit"
                     class="btn btn-primary">Update Account <i class="fas fa-user-edit"></i></button>
