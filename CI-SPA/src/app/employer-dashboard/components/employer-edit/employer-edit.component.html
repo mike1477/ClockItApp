@@ -14,6 +14,10 @@
                        placeholder="Change Profile Image"
                        (change)="onFileChange($event)">
             </div>
+            <div>
+                <img src="{{authService.currentUser?.profileImageUrl}}"
+                     alt="Profile Image">
+            </div>
             <button type="submit"
                     class="btn btn-primary">Update Account <i class="fas fa-user-edit"></i></button>
         </form>

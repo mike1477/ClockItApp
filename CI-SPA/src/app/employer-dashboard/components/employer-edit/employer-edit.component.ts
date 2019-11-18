@@ -13,7 +13,7 @@ export class EmployerEditComponent implements OnInit {
   model: any = {};
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     public progressBar: ProgressBarService,
     private alertService: AlertService,
     private employerService: EmployerService

@@ -60,7 +60,8 @@ namespace CI.API.Controllers
             return Ok(new
             {
                 result = result,
-                token = JwtTokenGeneratorMachine(user).Result
+                token = JwtTokenGeneratorMachine(user).Result,
+                user
             });
         }
 
