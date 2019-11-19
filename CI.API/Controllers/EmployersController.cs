@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
+using AutoMapper;
 using CI.API.ViewModels;
 using CI.DAL;
 using CI.DAL.Entities;
@@ -27,10 +28,12 @@ namespace CI.API.Controllers
         private readonly IOptions<EmailOptionsDTO> _emailOptions;
         private readonly IEmail _email;
         private readonly ICloudStorage _cloudStorage;
+        private readonly IMapper _mapper;
 
         public EmployersController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager,
-        IOptions<EmailOptionsDTO> emailOptions, IEmail email, ICloudStorage cloudStorage)
+        IOptions<EmailOptionsDTO> emailOptions, IEmail email, ICloudStorage cloudStorage, IMapper mapper)
         {
+            _mapper = mapper;
             _email = email;
             _cloudStorage = cloudStorage;
             _emailOptions = emailOptions;
@@ -112,13 +115,14 @@ namespace CI.API.Controllers
 
             var result = await _userManager.UpdateAsync(employerFromDB);
             var updatedEmployer = await _userManager.FindByIdAsync(employerid);
+            var employerToReturn = _mapper.Map<UserViewModel>(updatedEmployer);
 
             if (result.Succeeded)
             {
                 return Ok(new
                 {
                     result = result,
-                    updatedEmployer
+                    employerToReturn
                 });
             }
 

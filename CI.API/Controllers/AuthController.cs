@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using AutoMapper;
 using CI.API.ViewModels;
 using CI.DAL;
 using CI.DAL.Entities;
@@ -30,10 +31,12 @@ namespace CI.API.Controllers
         private readonly IConfiguration _config;
         private readonly IOptions<EmailOptionsDTO> _emailOptions;
         private readonly IEmail _email;
+        private readonly IMapper _mapper;
 
         public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration config,
-        IOptions<EmailOptionsDTO> emailOptions, IEmail email)
+        IOptions<EmailOptionsDTO> emailOptions, IEmail email, IMapper mapper)
         {
+            _mapper = mapper;
             _signInManager = signInManager;
             _config = config;
             _emailOptions = emailOptions;
@@ -57,11 +60,12 @@ namespace CI.API.Controllers
             {
                 return BadRequest(result);
             }
+            var employerToReturn = _mapper.Map<UserViewModel>(user);
             return Ok(new
             {
                 result = result,
                 token = JwtTokenGeneratorMachine(user).Result,
-                user
+                employerToReturn
             });
         }
 

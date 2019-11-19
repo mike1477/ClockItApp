@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using CI.API.Helpers;
 using CI.DAL;
 using CI.DAL.Entities;
 using CI.SER;
@@ -86,6 +88,8 @@ namespace CI.API
             });
             services.AddSingleton<ICloudStorage, AzureStorage>();
             services.Configure<EmailOptionsDTO>(Configuration.GetSection("MailJet"));
+
+            services.AddAutoMapper(typeof(MapperProfiles));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
