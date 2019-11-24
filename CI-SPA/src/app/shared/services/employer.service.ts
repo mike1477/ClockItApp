@@ -29,7 +29,7 @@ export class EmployerService {
         map((response: any) => {
           const user = response;
           if (user.result.succeeded) {
-            console.log(user);
+            this.authService.currentUser = user.employerToReturn;
           }
         })
       );

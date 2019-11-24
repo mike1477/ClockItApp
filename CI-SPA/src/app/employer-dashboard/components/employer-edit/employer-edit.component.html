@@ -14,7 +14,7 @@
                        placeholder="Change Profile Image"
                        (change)="onFileChange($event)">
             </div>
-            <div>
+            <div *ngIf="authService.currentUser.profileImageUrl">
                 <img src="{{authService.currentUser?.profileImageUrl}}"
                      alt="Profile Image">
             </div>

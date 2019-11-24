@@ -1,3 +1,18 @@
-.headerNav li{
-    cursor: pointer;
+@import "~bootswatch/dist/cyborg/variables";
+.headerNav li {
+  cursor: pointer;
+}
+.profile-dropdown-container {
+  display: flex;
+}
+.profile-dropdown-container span {
+  width: 36px;
+  height: 36px;
+  border-radius: 100%;
+  overflow: hidden;
+  cursor: default;
+  border: solid $danger;
+}
+.profile-dropdown-container span img {
+  height: 35px;
 }

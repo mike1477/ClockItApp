@@ -24,8 +24,9 @@ export class AuthService {
         const user = response;
         if (user.result.succeeded) {
           localStorage.setItem("token", user.token);
+          localStorage.setItem("user", JSON.stringify(user.userToReturn));
           this.decodedToken = this.helper.decodeToken(user.token);
-          this.currentUser = user.user;
+          this.currentUser = user.userToReturn;
         }
       })
     );

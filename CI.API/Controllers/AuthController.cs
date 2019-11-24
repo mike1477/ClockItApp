@@ -60,12 +60,12 @@ namespace CI.API.Controllers
             {
                 return BadRequest(result);
             }
-            var employerToReturn = _mapper.Map<UserViewModel>(user);
+            var userToReturn = _mapper.Map<UserViewModel>(user);
             return Ok(new
             {
                 result = result,
                 token = JwtTokenGeneratorMachine(user).Result,
-                employerToReturn
+                userToReturn
             });
         }
 

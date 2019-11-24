@@ -29,9 +29,13 @@
                    [routerLink]="['login']"
                    routerLinkActive="active">Login</a>
             </li>
-            <li class="nav-item dropdown"
+            <li class="nav-item dropdown profile-dropdown-container"
                 *ngIf="authService.loggedIn();"
                 dropdown>
+                <span>
+                    <img src="{{authService.currentUser?.profileImageUrl}}"
+                         alt="Profile Image">
+                </span>
                 <a class="nav-link"
                    dropdownToggle>
                     Welcome {{authService.decodedToken?.unique_name}}
